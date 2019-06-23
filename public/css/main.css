@@ -4153,7 +4153,7 @@
 				}
 
 			.banner > article h2 {
-				font-size: 7rem;
+				font-size: 4rem;
 				margin-bottom: 0;
 				color: #FFF;
 				font-weight: 300;
@@ -4219,8 +4219,8 @@
 
 			.banner.full {
 				padding: 0;
-				min-height: 75vh;
-				height: 75vh !important;
+				min-height: 25vh;
+				height: 25vh !important;
 			}
 
 		}
@@ -4229,8 +4229,8 @@
 
 			.banner.full {
 				padding: 0;
-				min-height: 50vh;
-				height: 50vh !important;
+				min-height: 20vh;
+				height: 20	vh !important;
 			}
 
 			.banner > article {
