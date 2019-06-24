@@ -15,12 +15,12 @@ class Pipe {
   
 
   hits(bird) {
-    if (bird.y < this.top || bird.y > birdP5.height - this.bottom) {
-      if (bird.x > this.x && bird.x < this.x + this.w) {
+    if (bird.y <= this.top || (bird.y+bird.r*2) >= birdP5.height - this.bottom) {
+      if (bird.x >= this.x && bird.x <= this.x + this.w) {
         this.highlight = true;
 
-        if(bird.y < this.top) this.isHighlightTop = true;
-        if(bird.y > birdP5.height - this.bottom) this.isHighlightBot = true;
+        if(bird.y <= this.top) this.isHighlightTop = true;
+        if((bird.y+bird.r*2) >= birdP5.height - this.bottom) this.isHighlightBot = true;
 
         return true;
       }
@@ -51,10 +51,16 @@ class Pipe {
       }
     }else
     {
+      birdP5.stroke(255);
+      birdP5.strokeWeight(1);
+      birdP5.noFill();
+
       //Draw top
+      // birdP5.rect(this.x, 0, this.w , this.top); //Stroke border testing
       birdP5.image(pipemodel_reverse, this.x, 0, this.w, this.top);
 
       //Draw bottom
+      // birdP5.rect(this.x, birdP5.height-this.bottom, this.w, this.bottom); //Stroke border testing
       birdP5.image(pipemodel, this.x, birdP5.height-this.bottom, this.w, this.bottom);
     }
 

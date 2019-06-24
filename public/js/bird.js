@@ -45,7 +45,7 @@ class Bird {
     // birdP5.ellipse(this.x, this.y, this.r * 2, this.r * 2);
     birdP5.image(birdmodel, this.x, this.y, this.r * 2, this.r * 2);
 
-    //Stroke testing
+    //Stroke border testing
     // birdP5.stroke(255);
     // birdP5.strokeWeight(1);
     // birdP5.noFill();
