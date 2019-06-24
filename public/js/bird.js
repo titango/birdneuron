@@ -13,7 +13,7 @@ class Bird {
   constructor(brain){
     this.x = 64;
     this.y = birdP5.height/2;
-    this.r = 12;
+    this.r = 15;
 
     this.gravity = 0.8;
     this.lift = -12;
@@ -42,9 +42,14 @@ class Bird {
   
   //Display the bird
   show() {
-    birdP5.stroke(255)
-    birdP5.fill(255, 100);
-    birdP5.ellipse(this.x, this.y, this.r * 2, this.r * 2);
+    // birdP5.ellipse(this.x, this.y, this.r * 2, this.r * 2);
+    birdP5.image(birdmodel, this.x, this.y, this.r * 2, this.r * 2);
+
+    //Stroke testing
+    // birdP5.stroke(255);
+    // birdP5.strokeWeight(1);
+    // birdP5.noFill();
+    // birdP5.rect(this.x, this.y, this.r * 2, this.r * 2);
   }
 
   // Act as the object's brain to make decision to jump or not
