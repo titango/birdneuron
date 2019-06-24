@@ -86,8 +86,8 @@ var s = function(sketch)
 
     // Should we speed up cycles per frame
     let cycles = speedSlider.value();
+    // console.log("cycles:", cycles);
     speedSpan.html(cycles);
-
 
     // How many times to advance the game
     for (let n = 0; n < cycles; n++) {
