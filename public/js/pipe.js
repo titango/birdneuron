@@ -9,6 +9,8 @@ class Pipe {
     this.speed = 6;
 
     this.highlight = false;
+    this.isHighlightTop = false;
+    this.isHighlightBot = false;
   }
   
 
@@ -16,6 +18,10 @@ class Pipe {
     if (bird.y < this.top || bird.y > birdP5.height - this.bottom) {
       if (bird.x > this.x && bird.x < this.x + this.w) {
         this.highlight = true;
+
+        if(bird.y < this.top) this.isHighlightTop = true;
+        if(bird.y > birdP5.height - this.bottom) this.isHighlightBot = true;
+
         return true;
       }
     }
@@ -26,11 +32,36 @@ class Pipe {
   show() {
     birdP5.stroke(255);
     birdP5.fill(255);
+
+    //Touching the pipe
     if (this.highlight) {
+      birdP5.stroke(255);
+      birdP5.strokeWeight(1);
       birdP5.fill(255, 0, 0);
+
+      if(this.isHighlightTop)
+      {
+        birdP5.rect(this.x, 0, this.w , this.top);
+        birdP5.image(pipemodel, this.x, birdP5.height-this.bottom, this.w, this.bottom);
+      
+      }else if(this.isHighlightBot)
+      {
+        birdP5.image(pipemodel_reverse, this.x, 0, this.w, this.top); 
+        birdP5.rect(this.x, birdP5.height-this.bottom, this.w, this.bottom);
+      }
+    }else
+    {
+      //Draw top
+      birdP5.image(pipemodel_reverse, this.x, 0, this.w, this.top);
+
+      //Draw bottom
+      birdP5.image(pipemodel, this.x, birdP5.height-this.bottom, this.w, this.bottom);
     }
-    birdP5.rect(this.x, 0, this.w, this.top);
-    birdP5.rect(this.x, birdP5.height-this.bottom, this.w, this.bottom);
+
+    
+
+    // birdP5.rect(this.x, 0, this.w, this.top);
+    // birdP5.rect(this.x, birdP5.height-this.bottom, this.w, this.bottom);
   }
 
   update() {

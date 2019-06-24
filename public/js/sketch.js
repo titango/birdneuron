@@ -23,12 +23,27 @@ let highScore = 0;
 let runBest = false;
 let runBestButton;
 
+//Model + images
+let birdmodel;
+let birdbackground;
+let pipemodel;
+let pipemodel_reverse;
+
+
 
 var s = function(sketch)
 {
+  sketch.preload = function() {
+    birdmodel = sketch.loadImage('images/birdmodel.png');
+    birdbackground = sketch.loadImage('images/birdgame_background.png');
+    pipemodel = sketch.loadImage('images/pipemodel.png');
+    pipemodel_reverse = sketch.loadImage('images/pipemodel_reverse.png');
+  }
+
   sketch.setup = function()
   {
-    var canvas = sketch.createCanvas(600, 480);
+    sketch.angleMode(sketch.DEGREES);
+    var canvas = sketch.createCanvas(650, 480);
 
     // Move the canvas so it’s inside our <div id="sketch-holder">.
     canvas.parent('bird-canvas');
@@ -66,7 +81,8 @@ var s = function(sketch)
 
   sketch.draw = function()
   {
-    sketch.background(0);
+    // sketch.background(0);
+    sketch.background(birdbackground);
 
     // Should we speed up cycles per frame
     let cycles = speedSlider.value();
