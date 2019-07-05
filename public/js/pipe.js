@@ -12,7 +12,6 @@ class Pipe {
     this.isHighlightTop = false;
     this.isHighlightBot = false;
   }
-  
 
   hits(bird) {
     if (bird.y <= this.top || (bird.y+bird.r*2) >= birdP5.height - this.bottom) {
@@ -63,8 +62,6 @@ class Pipe {
       // birdP5.rect(this.x, birdP5.height-this.bottom, this.w, this.bottom); //Stroke border testing
       birdP5.image(pipemodel, this.x, birdP5.height-this.bottom, this.w, this.bottom);
     }
-
-    
 
     // birdP5.rect(this.x, 0, this.w, this.top);
     // birdP5.rect(this.x, birdP5.height-this.bottom, this.w, this.bottom);

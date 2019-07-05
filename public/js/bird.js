@@ -112,7 +112,6 @@ class Bird {
     this.y += this.velocity;
 
     this.score++; // Increase for every frame the bird is still living
-
   }
 
 }

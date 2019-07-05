@@ -41,6 +41,7 @@ function generate(oldBirds) {
 
 // Normalize the fitness of all birds
 function normalizeFitness(birds) {
+  
   // Make score exponentially better?
   for (let i = 0; i < birds.length; i++) {
     birds[i].score = birdP5.pow(birds[i].score, 2);
@@ -66,7 +67,7 @@ function poolSelection(birds) {
 
   // Pick a random number between 0 and 1
   let r = birdP5.random(1);
-  console.log("r: ", r);
+  // console.log("r: ", r);
 
   // Keep subtracting probabilities until you get less than zero.
   // Higher probabilities will be more likely to be fixed since they will

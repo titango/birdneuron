@@ -30,12 +30,11 @@ let pipemodel;
 let pipemodel_reverse;
 
 
-
 var s = function(sketch)
 {
   sketch.preload = function() {
     birdmodel = sketch.loadImage('images/birdmodel.png');
-    birdbackground = sketch.loadImage('images/birdgame_background.png');
+    birdbackground = sketch.loadImage('images/birdgame_background.jpg');
     pipemodel = sketch.loadImage('images/pipemodel.png');
     pipemodel_reverse = sketch.loadImage('images/pipemodel_reverse.png');
   }
@@ -133,6 +132,7 @@ var s = function(sketch)
             }
           }
 
+          // If birds fall out of game's frame -> dead
           if (bird.bottomTop()) {
             activeBirds.splice(i, 1);
           }
