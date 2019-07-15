@@ -2,9 +2,9 @@
 function resetGame() {
   counter = 0;
   // Resetting best bird score to 0
-  if (bestBird) {
-    bestBird.score = 0;
-  }
+  // if (bestBird) {
+  //   bestBird.score = 0;
+  // }
   pipes = [];
 }
 
@@ -13,17 +13,17 @@ function nextGeneration() {
   console.log("next gen");
   resetGame();
   // Normalize the fitness values 0-1
-  normalizeFitness(allBirds);
+  normalizeFitness(bn.population);
 
   //Sort by decending
-  var sortBirds = allBirds.sort(function(a, b){
+  var sortBirds = bn.population.sort(function(a, b){
     return b.fitness - a.fitness;
   });
   
   // Generate a new set of birds
-  activeBirds = generate(sortBirds);
+  bn.activePopulation = generate(sortBirds);
   // Copy those birds to another array
-  allBirds = activeBirds.slice();
+  bn.population = bn.activePopulation.slice();
 }
 
 // Generate a new population of birds

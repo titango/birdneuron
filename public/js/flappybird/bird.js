@@ -1,12 +1,16 @@
-function mutate(x) {
-  if (birdP5.random(1) < 0.1) {
-    let offset = birdP5.randomGaussian() * 0.5;
-    let newx = x + offset;
-    return newx;
-  } else {
-    return x;
-  }
-}
+// function mutate(x) {
+//   if (Math.random(1) < 0.1) {
+
+//     let offset = Math.sqrt(-2 * Math.log(Math.random()))*Math.cos((2*Math.PI) * Math.random()) * 0.5;
+//     // let offsetold = birdP5.randomGaussian() * 0.5;
+//     // console.log("offset: ", offset);
+//     // console.log("offsetold: ", offsetold);
+//     let newx = x + offset;
+//     return newx;
+//   } else {
+//     return x;
+//   }
+// }
 
 class Bird {
 
@@ -19,25 +23,19 @@ class Bird {
     this.lift = -12;
     this.velocity = 0;
 
+    this.inputs = [];
+
     // Score is how many frames it's been alive
     this.score = 0;
 
     // Fitness is normalized version of score
     this.fitness = 0;
-
-    if(brain instanceof NeuralNetwork)
-    {
-      this.brain = brain.copy();
-      this.brain.mutate(mutate);
-    }else {
-      this.brain = new NeuralNetwork(5,8,2); // Neural network  bird  
-    }
     
   }
 
   copy()
   {
-    return new Bird(this.brain);
+    return new Bird();
   }
   
   //Display the bird
@@ -84,13 +82,14 @@ class Bird {
       // bird's y velocity
       inputs[4] = birdP5.map(this.velocity, -5, 5, 0, 1);
 
-      let output = this.brain.predict(inputs);
-      
-      // if(output[0] > output[1] && this.velocity >= )
-      if(output[1] > output[0])
-      {
-        this.up();
-      }
+      return inputs;
+      // let output = this.brain.predict(inputs);
+      // console.log("output: ", output);
+      // // if(output[0] > output[1] && this.velocity >= )
+      // if(output[1] > output[0])
+      // {
+      //   this.up();
+      // }
     }
   }
 
