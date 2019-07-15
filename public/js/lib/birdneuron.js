@@ -53,29 +53,20 @@ class BirdNeuron
 		for(var i = 0; i < arrayObjects.length; i++)
 		{
 			let obj = arrayObjects[i];
+			obj.score = 0;
+			obj.fitness = 0;
 			obj.brain = new NeuralNetwork(this._inputlayer,this._hiddenlayer, this._outputlayer);
-			obj.action = function()
+			obj.outputs = function()
 			{
 				if(obj.inputs)
 				{
-					let outputs = obj.brain.predict(obj.inputs);
-					  // console.log("outputs: ", outputs);
-				      // if(output[0] > output[1] && this.velocity >= )
-				      if(outputs[1] > outputs[0])
-				      {
-				        obj.up();
-				      }
+					var outputs = obj.brain.predict(obj.inputs);
+				    return outputs;
 				}
-				
 			}
 			this._addToPopulation(arrayObjects[i]);
 			this._addToActivePopulation(arrayObjects[i]);
 		}
-	}
-
-	output()
-	{
-
 	}
 
 	_addToPopulation(object)
@@ -150,22 +141,16 @@ class BirdNeuron
 	  // console.log("objects[index]: ", objects[index]);
 	  var tempBrain = objects[index].brain;
 	  let returnObj = objects[index].copy();
-	  // let returnObj = objects[index].copy();
-	  // console.log("return obj: ", returnObj);
-	  returnObj.action = function()
-			{
-				if(returnObj.inputs)
-				{
-					let outputs = returnObj.brain.predict(returnObj.inputs);
-					  // console.log("outputs: ", outputs);
-				      // if(output[0] > output[1] && this.velocity >= )
-				      if(outputs[1] > outputs[0])
-				      {
-				        returnObj.up();
-				      }
-				}
-				
-			}
+	  returnObj.score = 0;
+	  returnObj.fitness = 0;
+	  returnObj.outputs = function()
+	  {
+		if(returnObj.inputs)
+		{
+			var outputs = returnObj.brain.predict(returnObj.inputs);
+		    return outputs;
+		}
+	  }
 	  returnObj.brain = tempBrain.copy();
 	  returnObj.brain.mutate(function(x){
 		if (Math.random(1) < 0.1) {

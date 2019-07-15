@@ -137,7 +137,9 @@ var s = function(sketch)
           // Bird uses its brain!
           bird.inputs = bird.think(pipes);
           // console.log("bird.inputs: ", bird.inputs);
-          bird.action();
+          var actions = bird.outputs();
+          // console.log("actions: ", actions);
+          if(actions) bird.do(actions);
           bird.update();
 
           // Check all the pipes

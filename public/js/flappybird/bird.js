@@ -22,15 +22,6 @@ class Bird {
     this.gravity = 0.8;
     this.lift = -12;
     this.velocity = 0;
-
-    this.inputs = [];
-
-    // Score is how many frames it's been alive
-    this.score = 0;
-
-    // Fitness is normalized version of score
-    this.fitness = 0;
-    
   }
 
   copy()
@@ -90,6 +81,14 @@ class Bird {
       // {
       //   this.up();
       // }
+    }
+  }
+
+  do(outputs)
+  {
+    if(outputs[1] > outputs[0])
+    {
+      this.up();
     }
   }
 
