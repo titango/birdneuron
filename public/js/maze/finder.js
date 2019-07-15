@@ -89,10 +89,10 @@ function finderCells(i,j){
 
     this.avails = function(pcells){
         var av = [];
-        var top = pcells[index(this.i,this.j-1)];
-        var right = pcells[index(this.i+1,this.j)];
-        var bottom = pcells[index(this.i,this.j+1)];
-        var left = pcells[index(this.i-1,this.j)];
+        var top = pcells[checkIndex(this.i,this.j-1)];
+        var right = pcells[checkIndex(this.i+1,this.j)];
+        var bottom = pcells[checkIndex(this.i,this.j+1)];
+        var left = pcells[checkIndex(this.i-1,this.j)];
         if(top && !this.walls[0] && !top.visited)
             av.push(top);
         if(right && !this.walls[1] && !right.visited)

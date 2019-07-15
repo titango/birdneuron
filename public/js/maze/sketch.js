@@ -1,4 +1,8 @@
 // Contributed by Henry
+
+//Using bird neuron
+let bn = new BirdNeuron();
+
 var cols, rows;
 var w = 100;
 var cells = [];
@@ -14,51 +18,27 @@ var runBestButton;
 var solveGame = false;
 var solveButton;
 var finder = undefined;
+var circle1 = new Circle();
+
 
 
 document.onkeydown = function(e) {
   event.preventDefault();
-  // console.log(current);
-  var index = current.index;
     switch (e.keyCode) {
         case 37:
-            // alert('left');
-            // current.i--;
-             if((index - 1) >= 0){
-                index = index - 1;
-             } 
+             circle1.moveLeft();
             break;
         case 38:
-            // alert('up');
-            // current.j--;
-            if((index - cols) >= 0){
-              index = index - cols;
-            }
+              circle1.moveUp();
             break;
         case 39:
-            // alert('right');
-            // current.i++;
-            if((index + 1) < (cols * rows)){
-                index = index + 1;
-             }
+              circle1.moveRight();
             break;
         case 40:
-            // alert('down');
-            // current.j++;
-            if((index + cols) < (cols * rows)){
-              index = index + cols;
-            }
-            
+              circle1.moveBottom();
             break;
     }
-    // ellipse(0.5*w+w*current.i,0.5*w+w*current.j,w/2,w/2);
-    //         fill(255,0,255);
-    current = cells[index];
-    // console.log(cols);
-    // console.log(rows);
-    // console.log(index);
-    // console.log("cells");
-    // console.log(cells);
+    // circle1.draw();
 };
 
 var s = function(sketch)
@@ -89,6 +69,24 @@ var s = function(sketch)
     solveButton = sketch.select('#solve');
     solveButton.mousePressed(sketch.toggleState1);
     
+    // Create a population
+    bn.totalPopulation = 500;
+    bn.inputlayer = 4;
+    bn.hiddenlayer = 8;
+    bn.outputlayer = 2;
+
+    //Create circles
+    var tempCircles = [];
+    for (let i = 0; i < bn.totalPopulation; i++) {
+      let circle = new Circle();
+      // console.log("bird: ", bird);
+      tempCircles.push(circle);
+    }
+
+    // console.log(bn);
+    bn.input(tempCircles);
+
+
     cols = Math.floor(canvas.width / w);
     rows = Math.floor(canvas.height / w);
       //frameRate(5);
@@ -114,6 +112,8 @@ var s = function(sketch)
     //generate the maze
     if(runBest && !genFinished){
       generateMaze();
+      console.log(circle1);
+      
     }else if(genFinished && solveGame){
         if(finder){
           finder.draw();
@@ -122,6 +122,7 @@ var s = function(sketch)
           finder = new Finder();
         }
     }
+    circle1.draw();
 
   };
 
@@ -179,7 +180,7 @@ function generateMaze(){
     }
 }
 
-function index(i, j) {
+function checkIndex(i, j) {
 
   if (i < 0 || j < 0 || i > cols - 1 || j > rows - 1) {
     return -1;

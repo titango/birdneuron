@@ -21,10 +21,10 @@ class Cell {
 
   checkNeighbors(){
     var neighbors = [];
-    var top = cells[index(this.i, this.j - 1)];
-    var right = cells[index(this.i + 1, this.j)];
-    var bottom = cells[index(this.i, this.j + 1)];
-    var left = cells[index(this.i - 1, this.j)];
+    var top = cells[checkIndex(this.i, this.j - 1)];
+    var right = cells[checkIndex(this.i + 1, this.j)];
+    var bottom = cells[checkIndex(this.i, this.j + 1)];
+    var left = cells[checkIndex(this.i - 1, this.j)];
 
     if (top && !top.visited) {
       neighbors.push(top);
@@ -76,18 +76,21 @@ class Cell {
 
     if (this.visited) {
       mazeP5.noStroke();
-      // mazeP5.fill(255, 0, 255, 100);
-      // mazeP5.rect(x, y, w, w);
-      mazeP5.fill(100,255,100);
-      mazeP5.noStroke();
-      // console.log(current);
-      //draw current
-      mazeP5.ellipse(0.5*w+w*current.i,0.5*w+w*current.j,w/2,w/2);
-      mazeP5.fill(255,0,255);
+      // // mazeP5.fill(255, 0, 255, 100);
+      // // mazeP5.rect(x, y, w, w);
+      // mazeP5.fill(100,255,100);
+      // mazeP5.noStroke();
+      // // console.log(current);
+      // //draw current
+      // mazeP5.ellipse(0.5*w+w*current.i,0.5*w+w*current.j,w/2,w/2);
+      // mazeP5.fill(255,0,255);
 
       //draw longest
       // if(mazeP5.genfinished){
+        mazeP5.fill(100,255,100);// purple
         mazeP5.ellipse(0.5*w+w*longest.i,0.5*w+w*longest.j,w/2,w/2);
+        // purple
+
       // }
       
     }
@@ -96,5 +99,7 @@ class Cell {
     // noStroke();
     
   }
+
+
 
 }
