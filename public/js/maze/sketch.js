@@ -70,10 +70,10 @@ var s = function(sketch)
     solveButton.mousePressed(sketch.toggleState1);
     
     // Create a population
-    bn.totalPopulation = 500;
+    bn.totalPopulation = 50;
     bn.inputlayer = 4;
     bn.hiddenlayer = 8;
-    bn.outputlayer = 2;
+    bn.outputlayer = 4;
 
     //Create circles
     var tempCircles = [];
@@ -87,6 +87,7 @@ var s = function(sketch)
     bn.input(tempCircles);
 
 
+    //set up maze
     cols = Math.floor(canvas.width / w);
     rows = Math.floor(canvas.height / w);
       //frameRate(5);
@@ -101,28 +102,55 @@ var s = function(sketch)
 
       current = cells[0];
       longest = current;
+
+    //
   };
 
   // Function to actually draw the game here
   sketch.draw = function()
   {
     sketch.background(mazebackground);
-    
     drawMaze();
     //generate the maze
-    if(runBest && !genFinished){
+    if(!genFinished){
       generateMaze();
-      console.log(circle1);
-      
-    }else if(genFinished && solveGame){
-        if(finder){
-          finder.draw();
-          // console.log(finder.paths);
-        }else{
-          finder = new Finder();
-        }
+      // console.log(circle1);
+
+    }else if(genFinished){
+
+        // console.log(bn.activePopulation);
+        for (let i = bn.activePopulation.length - 1; i >= 0; i--) {
+          let circle = bn.activePopulation[i];
+          // Bird uses its brain!
+          circle.inputs = circle.predict();
+          // console.log(circle.inputs);
+          // console.log("bird.inputs: ", bird.inputs);
+          var actions = circle.outputs();
+          // console.log("actions: ", actions);
+          if(actions) circle1.do(actions);
+          // circle1.update();
+          circle.draw();
+          
+          if(circle.hit){
+            bn.activePopulation.splice(i, 1);
+          }
+          
+      }
+
+      if (bn.activePopulation.length == 0) {
+          bn.nextGeneration();
+      }
+
+
+
+        // if(finder){
+        //   finder.draw();
+        //   // console.log(finder.paths);
+        // }else{
+        //   finder = new Finder();
+        // }
     }
-    circle1.draw();
+    // circle1.draw();
 
   };
 
