@@ -12,6 +12,12 @@ class Circle {
     this.w = 100;
 
     this.hit = false;
+
+    this.moveUpCount = 0;
+    this.moveRightCount = 0;
+    this.moveBottomCount = 0;
+    this.moveLeftCount = 0;
+
   }
 
 
@@ -42,16 +48,16 @@ class Circle {
     var index = outputs.indexOf(max);
     // console.log(index);
     if(index == 0){
-      console.log("op up");
+      // console.log("op up");
       this.moveUp();
     }else if(index == 1){
-      console.log("op right");
+      // console.log("op right");
       this.moveRight();
     }else if(index == 2){
-      console.log("op bottom");
+      // console.log("op bottom");
       this.moveBottom();
     }else{
-      console.log("op left");
+      // console.log("op left");
       this.moveLeft();
       
     }
@@ -62,49 +68,55 @@ class Circle {
       this.j = cells[this.index].j;
       this.index = cells[this.index].index;
       this.step += 1;
+      // this.draw();
+      this.score++;
   }
 
   moveUp(){
-    if(!cells[this.index].walls[0]){
+    if(!cells[this.index].walls[0] && this.moveUpCount < cols){
       this.index = this.index - cols;
       this.updateCircle();
-      console.log("up");
+      this.moveUpCount++;
+      // console.log("up");
     }else{
       this.hit = true;
-      console.log("no up");
+      // console.log("no up");
     }
   }
 
   moveRight(){
-    if(!cells[this.index].walls[1]){
+    if(!cells[this.index].walls[1] && this.moveRightCount < cols){
       this.index = this.index + 1;
       this.updateCircle();
-      console.log("right");
+      this.moveRightCount++;
+      // console.log("right");
     }else{
       this.hit = true;
-      console.log("no right");
+      // console.log("no right");
     }
   }
 
   moveBottom(){
-    if(!cells[this.index].walls[2]){
+    if(!cells[this.index].walls[2] && this.moveBottomCount < cols){
       this.index = this.index + cols;
       this.updateCircle();
-      console.log("bottom");
+      this.moveBottomCount++;
+      // console.log("bottom");
     }else{
       this.hit = true;
-      console.log("no bottom");
+      // console.log("no bottom");
     }
   }
 
   moveLeft(){
-    if(!cells[this.index].walls[3]){
+    if(!cells[this.index].walls[3] && this.moveLeftCount < cols){
       this.index = this.index - 1;
       this.updateCircle();
-      console.log("left");
+      this.moveLeftCount++;
+      // console.log("left");
     }else{
       this.hit = true;
-      console.log("no left");
+      // console.log("no left");
     }
   }
 

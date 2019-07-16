@@ -70,7 +70,7 @@ var s = function(sketch)
     solveButton.mousePressed(sketch.toggleState1);
     
     // Create a population
-    bn.totalPopulation = 50;
+    bn.totalPopulation = 500;
     bn.inputlayer = 4;
     bn.hiddenlayer = 8;
     bn.outputlayer = 4;
@@ -112,7 +112,7 @@ var s = function(sketch)
     sketch.background(mazebackground);
     drawMaze();
     //generate the maze
-    if(!genFinished){
+    if(runBest && !genFinished){
       generateMaze();
       // console.log(circle1);
 
@@ -127,10 +127,10 @@ var s = function(sketch)
           // console.log("bird.inputs: ", bird.inputs);
           var actions = circle.outputs();
           // console.log("actions: ", actions);
-          if(actions) circle1.do(actions);
+          if(actions) circle.do(actions);
           // circle1.update();
           circle.draw();
-          
+
           if(circle.hit){
             bn.activePopulation.splice(i, 1);
           }
@@ -139,6 +139,7 @@ var s = function(sketch)
 
       if (bn.activePopulation.length == 0) {
           bn.nextGeneration();
+          console.log("new")
       }
 
 
