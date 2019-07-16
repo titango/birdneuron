@@ -10,13 +10,29 @@
 
 <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.min.js"> </script>
 <script language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js"></script>
-<script language="javascript" type="text/javascript" src="/js/birdneuron/lib/nn.js"></script>
-<script language="javascript" type="text/javascript" src="/js/birdneuron/lib/matrix.js"></script>
 
+<script language="javascript" type="text/javascript" src="/js/lib/birdneuron.js"></script>
+
+<!-- Maze lib -->
+<script language="javascript" type="text/javascript" src="/js/maze/circle.js"></script>
+<script language="javascript" type="text/javascript" src="/js/maze/finder.js"></script>
 <script language="javascript" type="text/javascript" src="/js/maze/sketch.js"></script>
+<script language="javascript" type="text/javascript" src="/js/maze/cell.js"></script>
+<meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0>
 
-	<div id="maze-canvas"></div>
 
+<!-- <link rel="stylesheet" type="text/css" href="/js/maze/style.css"> -->
+
+<section id="one" class="wrapper style2">
+		<div class="inner">
+			<div class="grid-style">
+				<div class="box" style="width: 1000 !important">
+			<div id="maze-canvas"></div>
+			<button id="best"> Generate Maze </button>
+			<button id="solve"> Solve Maze </button>
+			<!-- <button id="best"> Train AI </button> -->
+		</div>
+</section>
 
 <!-- Scripts Footer -->
 <div class="footer"></div>
