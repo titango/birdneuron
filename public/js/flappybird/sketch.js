@@ -21,8 +21,8 @@ let allTimeHighScoreSpan;
 let highScore = 0;
 
 // Training or just showing the current best
-// let runBest = false;
-// let runBestButton;
+let pause = false;
+let pauseButton;
 
 //Model + images
 let birdmodel;
@@ -54,8 +54,8 @@ var s = function(sketch)
     speedSpan = sketch.select('#speed');
     highScoreSpan = sketch.select('#hs');
     allTimeHighScoreSpan = sketch.select('#ahs');
-    // runBestButton = sketch.select('#best');
-    // runBestButton.mousePressed(sketch.toggleState);
+    pauseButton = sketch.select('#pause');
+    pauseButton.mousePressed(sketch.toggleState);
 
     // Create a population
     bn.totalPopulation = 500;
@@ -74,23 +74,19 @@ var s = function(sketch)
     console.log(bn);
     bn.input(tempBirds);
 
-    
-
   };
 
-  // sketch.toggleState = function()
-  // {
-  //   runBest = !runBest;
-  //   // Show the best bird
-  //   if (runBest) {
-  //     resetGame();
-  //     runBestButton.html('continue training');
-  //     // Go train some more
-  //   } else {
-  //     nextGeneration();
-  //     runBestButton.html('run best');
-  //   }
-  // }
+  sketch.toggleState = function()
+  {
+    pause = !pause;
+    if(pause)
+    {
+      pauseButton.html("Play");
+    }else
+    {
+      pauseButton.html("Pause");
+    }
+  }
 
   sketch.draw = function()
   {
@@ -102,6 +98,20 @@ var s = function(sketch)
     // console.log("cycles:", cycles);
     speedSpan.html(cycles);
 
+    if(pause)
+    {
+      for(let i = 0; i < bn.activePopulation.length; i++)
+      {
+        bn.activePopulation[i].show();
+      }
+
+      for(let i = 0; i < pipes.length; i++)
+      {
+        pipes[i].show();
+      }
+
+      return;
+    }
     // How many times to advance the game
     for (let n = 0; n < cycles; n++) {
 

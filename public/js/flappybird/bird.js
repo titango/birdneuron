@@ -14,7 +14,7 @@
 
 class Bird {
 
-  constructor(brain){
+  constructor(){
     this.x = 64;
     this.y = birdP5.height/2;
     this.r = 15;
