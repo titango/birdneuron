@@ -69,6 +69,40 @@ class BirdNeuron
 		}
 	}
 
+	exportModels()
+	{
+		var json = JSON.stringify(this._population);
+		this._exportFunction(json);
+	}
+
+	importModels()
+	{
+
+	}
+
+	exportNeuron()
+	{
+		var json = JSON.stringify(this);
+		this._exportFunction(json);
+	}
+
+	importNeuron()
+	{
+		
+	}
+
+	//Data: As string json
+	_exportFunction(data)
+	{
+	  //Using javascript
+	  var a_element = document.createElement('a');
+	  a_element.setAttribute("href", "data:" + "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data)));
+	  a_element.setAttribute("download", "data.json");
+	  var text = document.createTextNode("Download");
+	  a_element.appendChild(text);
+	  a_element.click();
+	}
+
 	_addToPopulation(object)
 	{
 		this._population.push(object);

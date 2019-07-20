@@ -57,8 +57,11 @@ var s = function(sketch)
     pauseButton = sketch.select('#pause');
     pauseButton.mousePressed(sketch.toggleState);
 
+    exportmodelBtn = sketch.select("#exportmodel");
+    exportmodelBtn.mousePressed(sketch.exportModel);
+
     // Create a population
-    bn.totalPopulation = 500;
+    bn.totalPopulation = 1;
     bn.inputlayer = 5;
     bn.hiddenlayer = 8;
     bn.outputlayer = 2;
@@ -75,6 +78,11 @@ var s = function(sketch)
     bn.input(tempBirds);
 
   };
+
+  sketch.exportModel = function()
+  {
+    bn.exportNeuron();
+  }
 
   sketch.toggleState = function()
   {
