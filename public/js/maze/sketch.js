@@ -22,6 +22,9 @@ var finder = undefined;
 var circle1 = new Circle();
 var generation = 0;
 var pathIndex = [];
+var highestScore = 0; 
+let speedSlider;
+let speedSpan;
 
 
 document.onkeydown = function(e) {
@@ -70,6 +73,9 @@ var s = function(sketch)
     runBestButton.mousePressed(sketch.toggleState);
     // solveButton = sketch.select('#solve');
     // solveButton.mousePressed(sketch.toggleState1);
+
+    speedSlider = sketch.select('#speedSlider');
+    speedSpan = sketch.select('#speed');
     
     // Create a population
     bn.totalPopulation = 500;
@@ -112,6 +118,11 @@ var s = function(sketch)
   sketch.draw = function()
   {
     sketch.background(mazebackground);
+    // Should we speed up cycles per frame
+    let cycles = speedSlider.value();
+    // console.log("cycles:", cycles);
+    speedSpan.html(cycles);
+
     drawMaze();
     //generate the maze
     if(runBest && !genFinished){
@@ -138,25 +149,35 @@ var s = function(sketch)
 
     }else if(solveMazeFinished){
 
+        for (let n = 0; n < cycles; n++) {
+
+            for (let i = bn.activePopulation.length - 1; i >= 0; i--) {
+              let circle = bn.activePopulation[i];
+              // Bird uses its brain!
+              circle.inputs = circle.predict();
+              // console.log(circle.inputs);
+              // console.log("bird.inputs: ", bird.inputs);
+              var actions = circle.outputs();
+              // console.log("actions: ", actions);
+              if(actions) circle.do(actions);
+              // circle1.update();
+              circle.generation = generation;
+              // circle.draw();
+
+              if(circle.hit){
+                // console.log(actions);
+                bn.activePopulation.splice(i, 1);
+              }
+
+            }
+
+        }
+
       // console.log(bn.activePopulation);
         for (let i = bn.activePopulation.length - 1; i >= 0; i--) {
           let circle = bn.activePopulation[i];
-          // Bird uses its brain!
-          circle.inputs = circle.predict();
-          // console.log(circle.inputs);
-          // console.log("bird.inputs: ", bird.inputs);
-          var actions = circle.outputs();
-          // console.log("actions: ", actions);
-          if(actions) circle.do(actions);
-          // circle1.update();
-          circle.generation = generation;
-          // circle.draw();
-
-          if(circle.hit){
-            bn.activePopulation.splice(i, 1);
-          }
-          
-      }
+          circle.draw();
+        }
 
       if (bn.activePopulation.length == 0) {
           bn.nextGeneration();

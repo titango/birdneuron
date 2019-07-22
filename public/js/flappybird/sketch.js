@@ -114,6 +114,7 @@ var s = function(sketch)
     }
     // How many times to advance the game
     for (let n = 0; n < cycles; n++) {
+      
 
       // Show all the pipes
       for (let i = pipes.length - 1; i >= 0; i--) {
