@@ -79,6 +79,33 @@ var s = function(sketch)
 
     bn.input(tempBirds, false);
 
+
+    //Ajax get statistics
+    // $.ajax({
+    //   url: "http://localhost:8080/birdchart/get",
+    //   success: function(result){
+    //     console.log("result: ", result);
+    //   }
+    // });
+
+    //Ajax upload statistics
+    $.ajax({
+      url: "http://localhost:8080/birdchart/upload",
+      type: "POST",
+      data: {
+        data: {
+          topScore: 1,
+          data: {
+            generation: 1,
+            time: 1,
+            score: 1
+          }
+        }
+      },
+      success: function(result){
+        console.log("upload successfully: ", result);
+      } 
+    });
   };
 
   sketch.exportModel = function()

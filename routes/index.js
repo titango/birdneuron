@@ -1,5 +1,9 @@
 var express = require('express');
+var mongoose = require('mongoose');
 const path = require('path');
+var birdRoute = require('./birdchart');
+
+
 var router = express.Router();
 
 //return the home page
@@ -31,5 +35,9 @@ router.get('/demo1',function(req,res){
 router.get('/demo2',function(req,res){
   res.sendFile(path.join(__dirname+'/../views/demo2.html'));
 });
+
+//BIRD CHART API
+router.get('/birdchart/get',birdRoute.getAll);
+router.post('/birdchart/upload',birdRoute.uploadData);
 
 module.exports = router;
