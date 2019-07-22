@@ -14,14 +14,30 @@
 
 class Bird {
 
-  constructor(){
-    this.x = 64;
-    this.y = birdP5.height/2;
-    this.r = 15;
+  constructor(savedBird){
 
-    this.gravity = 0.8;
-    this.lift = -12;
-    this.velocity = 0;
+    if(savedBird)
+    {
+      console.log("savedBird: ", savedBird);
+      this.x = savedBird.x;
+      this.y = savedBird.y;
+      this.r = savedBird.r;
+      this.gravity = savedBird.gravity;
+      this.lift = savedBird.lift;
+      this.velocity = savedBird.velocity;
+      this.brain = savedBird.brain;
+      this.inputs = savedBird.inputs;
+    }else
+    {
+      this.x = 64;
+      this.y = birdP5.height/2;
+      this.r = 15;
+
+      this.gravity = 0.8;
+      this.lift = -12;
+      this.velocity = 0;
+    }
+    
   }
 
   copy()

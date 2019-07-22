@@ -17,7 +17,6 @@ class Circle {
     this.moveRightCount = 0;
     this.moveBottomCount = 0;
     this.moveLeftCount = 0;
-
   }
 
 

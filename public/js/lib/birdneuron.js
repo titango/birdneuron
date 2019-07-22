@@ -24,38 +24,73 @@ class BirdNeuron
 
 			this._population = [];
 			this._activePopulation = [];
+			this._bestpopulation = null;
 		}
+	}
+
+	modelCopy(mod)
+	{
+	  var tempBrain = mod.brain;
+      var returnObj = mod.copy();
+      returnObj.score = 0;
+      returnObj.fitness = 0;
+      returnObj.outputs = function()
+      {
+        if(returnObj.inputs)
+        {
+          var outputs = returnObj.brain.predict(returnObj.inputs);
+            return outputs;
+        }
+      }
+      returnObj.brain = tempBrain.copy();
+      returnObj.brain.mutate(function(x){
+		if (Math.random(1) < 0.1) {
+		  // let offset = Math.sqrt(-2 * Math.log(Math.random()))*Math.cos((2*Math.PI) * Math.random()) * 0.5;
+		  let offset = birdP5.randomGaussian() * 0.5;
+		  let newx = x + offset;
+		  return newx;
+		} else {
+		  return x;
+		}
+	   });
+      return returnObj;
 	}
 
 	// Next generation
 	// presetFunc is used to reset all outside variables
 	nextGeneration(preresetFunc)
 	{
+		console.log("next gen");
 		if(preresetFunc)
 		{
 			preresetFunc();
 		}
+
 		this._normalizeFitness(this._population);
 
 		var sortBirds = this._population.sort(function(a, b){
 		    return b.fitness - a.fitness;
 		});
 
+		this._bestpopulation = [sortBirds[0]];
 		this._activePopulation = this._generateNewPopulation(sortBirds);
-		this._population = this.activePopulation.slice();
-
-		// console.log("pop: ", this._population);
-		// console.log("active: ", this._activePopulation);
+		this._population = this._activePopulation.slice();
 	}
 
-	input(arrayObjects)
+	input(arrayObjects, useSavedData)
 	{
+		this._population = [];
+		this._activePopulation = [];
+
 		for(var i = 0; i < arrayObjects.length; i++)
 		{
 			let obj = arrayObjects[i];
 			obj.score = 0;
 			obj.fitness = 0;
-			obj.brain = new NeuralNetwork(this._inputlayer,this._hiddenlayer, this._outputlayer);
+			if(!useSavedData)
+			{
+				obj.brain = new NeuralNetwork(this._inputlayer,this._hiddenlayer, this._outputlayer);
+			}
 			obj.outputs = function()
 			{
 				if(obj.inputs)
@@ -64,31 +99,30 @@ class BirdNeuron
 				    return outputs;
 				}
 			}
+
 			this._addToPopulation(arrayObjects[i]);
-			this._addToActivePopulation(arrayObjects[i]);
+			// this._addToActivePopulation(arrayObjects[i]);	
 		}
+		this._activePopulation = this._population.slice();
 	}
 
-	exportModels()
+	// Export the whole population
+	export()
 	{
 		var json = JSON.stringify(this._population);
 		this._exportFunction(json);
 	}
 
-	importModels()
+	// Export best previous generation
+	exportBest()
 	{
-
-	}
-
-	exportNeuron()
-	{
-		var json = JSON.stringify(this);
+		var json = JSON.stringify(this._bestpopulation);
 		this._exportFunction(json);
 	}
 
-	importNeuron()
+	import(classParam)
 	{
-		
+		this._importFunction(classParam);
 	}
 
 	//Data: As string json
@@ -98,9 +132,44 @@ class BirdNeuron
 	  var a_element = document.createElement('a');
 	  a_element.setAttribute("href", "data:" + "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data)));
 	  a_element.setAttribute("download", "data.json");
-	  var text = document.createTextNode("Download");
-	  a_element.appendChild(text);
 	  a_element.click();
+	  a_element = null;
+	}
+
+	_importFunction(classParam)
+	{
+	  var that = this;
+	  var file_element = document.createElement('input');
+	  // a_element.setAttribute("href", "data:" + "text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(data)));
+	  file_element.setAttribute("type", "file");
+	  file_element.addEventListener("change", function(){
+	  	const fileList = this.files;
+	  	// console.log(fileList);
+
+	  	var reader = new FileReader();
+        reader.onload = function(){
+	        var objArray = JSON.parse(JSON.parse(event.target.result));
+	        console.log("objArray: ", objArray);
+
+	        var tempArray = [];
+	        for(var i = 0; i < objArray.length; i++)
+	        {
+	        	var b = new classParam();
+	        	Object.assign(b, objArray[i]);
+	        	var n = NeuralNetwork.deserialize(b.brain);
+	        	b.brain = n;
+	        	tempArray.push(b);
+	        }
+
+	        console.log(tempArray);
+	        that.input(tempArray, true);
+	        //that.nextGeneration();
+        };
+        reader.readAsText(event.target.files[0]);
+
+	  }, false);
+	  file_element.click();
+	  
 	}
 
 	_addToPopulation(object)
@@ -168,34 +237,11 @@ class BirdNeuron
 
 	  // Go back one
 	  index -= 1;
-	  // console.log("objects[index]: ", objects[index]);
 
 	  // Make sure it's a copy!
 	  // (this includes mutation)
-	  // console.log("objects[index]: ", objects[index]);
-	  var tempBrain = objects[index].brain;
-	  let returnObj = objects[index].copy();
-	  returnObj.score = 0;
-	  returnObj.fitness = 0;
-	  returnObj.outputs = function()
-	  {
-		if(returnObj.inputs)
-		{
-			var outputs = returnObj.brain.predict(returnObj.inputs);
-		    return outputs;
-		}
-	  }
-	  returnObj.brain = tempBrain.copy();
-	  returnObj.brain.mutate(function(x){
-		if (Math.random(1) < 0.1) {
-		  let offset = Math.sqrt(-2 * Math.log(Math.random()))*Math.cos((2*Math.PI) * Math.random()) * 0.5;
-		  // let offsetold = birdP5.randomGaussian() * 0.5;
-		  let newx = x + offset;
-		  return newx;
-		} else {
-		  return x;
-		}
-	   });
+
+	  var returnObj = this.modelCopy(objects[index]);
 	  return returnObj;
 	}
 

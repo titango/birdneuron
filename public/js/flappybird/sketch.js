@@ -60,8 +60,11 @@ var s = function(sketch)
     exportmodelBtn = sketch.select("#exportmodel");
     exportmodelBtn.mousePressed(sketch.exportModel);
 
+    importmodelBtn = sketch.select("#importmodel");
+    importmodelBtn.mousePressed(sketch.importModel);
+
     // Create a population
-    bn.totalPopulation = 1;
+    bn.totalPopulation = 500;
     bn.inputlayer = 5;
     bn.hiddenlayer = 8;
     bn.outputlayer = 2;
@@ -74,14 +77,18 @@ var s = function(sketch)
       tempBirds.push(bird);
     }
 
-    console.log(bn);
-    bn.input(tempBirds);
+    bn.input(tempBirds, false);
 
   };
 
   sketch.exportModel = function()
   {
-    bn.exportNeuron();
+    bn.exportBest();
+  }
+
+  sketch.importModel = function()
+  {
+    bn.import(Bird); 
   }
 
   sketch.toggleState = function()
@@ -240,6 +247,19 @@ var s = function(sketch)
           pipes = [];
         });
       }
+
+      // Import purpose
+      // if (bn.activePopulation.length == 0) {
+      //   console.log("no more birds");
+      //   bn.activePopulation = [];
+      //   for(var i = 0; i < bn.population.length; i++)
+      //   {
+      //     var obj = bn.modelCopy(bn.population[i]);
+      //     bn.activePopulation.push(obj);
+      //   }
+      //   counter = 0;
+      //   pipes = [];
+      // }
     // }
     
   };
