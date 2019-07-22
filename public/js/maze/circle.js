@@ -18,6 +18,13 @@ class Circle {
     this.moveBottomCount = 0;
     this.moveLeftCount = 0;
 
+    this.previousMove = -1;
+    this.currentMove = -1;
+
+    this.previousIndex = 0;
+
+    this.visitedIndex = [];
+    this.generation = 0;
   }
 
 
@@ -39,14 +46,35 @@ class Circle {
     var right = cells[this.index].walls[1] ? 1 : 0;
     var bottom = cells[this.index].walls[2] ? 1 : 0;
     var left = cells[this.index].walls[3] ? 1 : 0;
+    var distance = pathIndex.length - this.visitedIndex.length;
 
-    return [top, right, bottom, left];
+    return [top, right, bottom, left, distance];
   }
 
   do(outputs){
     var max  = Math.max.apply(null, outputs);
     var index = outputs.indexOf(max);
+    // var index = Math.floor(Math.random()*4);
     // console.log(index);
+    // if(this.generation != 0 && this.generation % 5 == 0 ){
+      // var checkIndex = pathIndex.indexOf(this.index);
+      // var nextIndex = pathIndex[checkIndex - 1];
+
+      // if(this.index == 0){
+      //   var nextIndex = pathIndex[pathIndex.length - 1];
+      // }
+
+      // if(nextIndex == this.index - cols){
+      //     this.moveUp();
+      // }else if(nextIndex == this.index + 1){
+      //     this.moveRight();
+      // }else if (nextIndex == this.index + cols){
+      //     this.moveBottom();
+      // }else if (nextIndex == this.index - 1){
+      //     this.moveLeft();
+      // }
+
+
     if(index == 0){
       // console.log("op up");
       this.moveUp();
@@ -58,25 +86,42 @@ class Circle {
       this.moveBottom();
     }else{
       // console.log("op left");
-      this.moveLeft();
-      
+      this.moveLeft(); 
     }
   }
 
   updateCircle(){
+
       this.i = cells[this.index].i;
       this.j = cells[this.index].j;
       this.index = cells[this.index].index;
+      
+      var check = this.visitedIndex.indexOf(this.index);
       this.step += 1;
-      // this.draw();
-      this.score++;
+      if(check == -1){
+        this.visitedIndex.push(this.index);
+        // this.step += 1;
+        // this.score++;
+
+        var rightIndex = pathIndex.indexOf(this.index);
+        if(rightIndex != -1){
+          this.score++;
+        }
+
+      }
+      
+      
+      this.draw();
+
+      this.previousIndex = this.index;
   }
 
   moveUp(){
-    if(!cells[this.index].walls[0] && this.moveUpCount < cols){
+    if(!cells[this.index].walls[0] && this.step < 100){
       this.index = this.index - cols;
       this.updateCircle();
       this.moveUpCount++;
+      this.currentMove = 0;
       // console.log("up");
     }else{
       this.hit = true;
@@ -85,11 +130,13 @@ class Circle {
   }
 
   moveRight(){
-    if(!cells[this.index].walls[1] && this.moveRightCount < cols){
+    if(!cells[this.index].walls[1] && this.step < 100){
       this.index = this.index + 1;
       this.updateCircle();
       this.moveRightCount++;
       // console.log("right");
+      this.currentMove = 1;
+
     }else{
       this.hit = true;
       // console.log("no right");
@@ -97,11 +144,12 @@ class Circle {
   }
 
   moveBottom(){
-    if(!cells[this.index].walls[2] && this.moveBottomCount < cols){
+    if(!cells[this.index].walls[2] && this.step < 100){
       this.index = this.index + cols;
       this.updateCircle();
       this.moveBottomCount++;
       // console.log("bottom");
+      this.currentMove = 2;
     }else{
       this.hit = true;
       // console.log("no bottom");
@@ -109,11 +157,12 @@ class Circle {
   }
 
   moveLeft(){
-    if(!cells[this.index].walls[3] && this.moveLeftCount < cols){
+    if(!cells[this.index].walls[3] && this.step < 100){
       this.index = this.index - 1;
       this.updateCircle();
       this.moveLeftCount++;
       // console.log("left");
+      this.currentMove = 3;
     }else{
       this.hit = true;
       // console.log("no left");

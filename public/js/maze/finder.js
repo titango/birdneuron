@@ -14,6 +14,7 @@ function path(cur, to){
     this.pcells = [];
     this.stack = [];
     this.way = [];
+    this.pathIndex = [];
     this.removeOptions = [];
     this.found = false;
     this.distance = 0;
@@ -50,13 +51,18 @@ function path(cur, to){
             
             this.current = this.stack.pop();
             if(this.current && this.current.visited && this.found){
-                // if(this.current.i !=){
-
-                // }
                 this.way.push(this.current);
+                this.pathIndex.push(checkIndex(this.current.i, this.current.j));
+            }
+
+            if(this.stack.length == 0){
+                solveMazeFinished = true;
             }
             
-            if(this.current == this.to) this.found = true;
+            if(this.current == this.to) {
+                this.found = true;
+                // solveMazeFinished = true;
+            }
         }
         
     }

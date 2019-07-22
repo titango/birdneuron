@@ -14,12 +14,14 @@ var distance = 0, longdist = 0;
 var longest;
 var genFinished = false;
 var runBest = false;
+var solveMazeFinished = false;
 var runBestButton;
 var solveGame = false;
 var solveButton;
 var finder = undefined;
 var circle1 = new Circle();
-
+var generation = 0;
+var pathIndex = [];
 
 
 document.onkeydown = function(e) {
@@ -66,12 +68,12 @@ var s = function(sketch)
     // allTimeHighScoreSpan = sketch.select('#ahs');
     runBestButton = sketch.select('#best');
     runBestButton.mousePressed(sketch.toggleState);
-    solveButton = sketch.select('#solve');
-    solveButton.mousePressed(sketch.toggleState1);
+    // solveButton = sketch.select('#solve');
+    // solveButton.mousePressed(sketch.toggleState1);
     
     // Create a population
     bn.totalPopulation = 500;
-    bn.inputlayer = 4;
+    bn.inputlayer = 5;
     bn.hiddenlayer = 8;
     bn.outputlayer = 4;
 
@@ -116,9 +118,27 @@ var s = function(sketch)
       generateMaze();
       // console.log(circle1);
 
-    }else if(genFinished){
+      // if(finder){
+      //     finder.draw();
+      //     // console.log(finder.paths);
+      //   }else{
+      //     finder = new Finder();
+      //   }
 
-        // console.log(bn.activePopulation);
+    }else if(genFinished && !solveMazeFinished){
+
+        if(finder){
+          finder.draw();
+          // console.log(finder.paths[0].pathIndex);
+          pathIndex = (finder.paths[0].pathIndex);
+          // console.log(pathIndex);
+        }else{
+          finder = new Finder();
+        }
+
+    }else if(solveMazeFinished){
+
+      // console.log(bn.activePopulation);
         for (let i = bn.activePopulation.length - 1; i >= 0; i--) {
           let circle = bn.activePopulation[i];
           // Bird uses its brain!
@@ -129,7 +149,8 @@ var s = function(sketch)
           // console.log("actions: ", actions);
           if(actions) circle.do(actions);
           // circle1.update();
-          circle.draw();
+          circle.generation = generation;
+          // circle.draw();
 
           if(circle.hit){
             bn.activePopulation.splice(i, 1);
@@ -139,17 +160,19 @@ var s = function(sketch)
 
       if (bn.activePopulation.length == 0) {
           bn.nextGeneration();
-          console.log("new")
+          generation++;
+          // console.log("generation: " + generation);
       }
 
+      // if(finder){
+      //     finder.draw();
+      //     // console.log(finder.paths[0].pathIndex);
+      //     pathIndex = (finder.paths[0].pathIndex);
+      //     // console.log(pathIndex);
+      //   }else{
+      //     finder = new Finder();
+      //   }
 
-
-        // if(finder){
-        //   finder.draw();
-        //   // console.log(finder.paths);
-        // }else{
-        //   finder = new Finder();
-        // }
     }
     // circle1.draw();
 
