@@ -1,5 +1,8 @@
 <meta charset="UTF-8">
 <div class="header"></div>
+
+<link rel="stylesheet" type="text/css" href="css/d3.css" />
+
 <!-- Scripts Header -->
 <script src="/js/jquery.min.js"></script>
 <script src="/js/jquery.scrollex.min.js"></script>
@@ -12,6 +15,7 @@
  <!-- Scripts Birds -->
 <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/p5.min.js"> </script>
 <script language="javascript" src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.8.0/addons/p5.dom.min.js"></script>
+<script language="javascript" type="text/javascript" src="/js/lib/d3.min.js"></script>
 <script language="javascript" type="text/javascript" src="/js/lib/birdneuron.js"></script>
 <script language="javascript" type="text/javascript" src="/js/flappybird/bird.js"></script>
 <script language="javascript" type="text/javascript" src="/js/flappybird/pipe.js"></script>
@@ -27,15 +31,18 @@
 			 <div class="box" style="width: 450 !important">
 				<p>
 					Speed: <input id="speedSlider" type="range" min="1" max="10" value="1"> <span id="speed">1</span>
-					<br/> High score: <span id="hs">0</span>
-					<br/> All time high score: <span id="ahs">0</span>
+					<!-- <br/> High score: <span id="hs">0</span> -->
+					<br/> Best score: <span id="ahs">0</span>
 				</p>
 				<p>
 					<button id="pause">Pause</button>
 					<button id="exportmodel">Export model</button>
 					<button id="importmodel">Import model</button>
 				</p>
+
 			</div>
+			<p style="font-size: 30px;">Score chart: </p>
+			<div id="linechart" style="width:100%; height:400px;border:1px dashed black;background-color: white;"></div>
 			</div>
 		</div>
 	</section>
