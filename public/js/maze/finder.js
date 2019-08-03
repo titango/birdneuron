@@ -6,7 +6,7 @@ function Finder(){
     this.draw = function(){
         //frameRate(5);
         this.paths[0].update();
-        this.paths[0].draw();
+        // this.paths[0].draw();
     }
 }
 
@@ -42,7 +42,10 @@ function path(cur, to){
             //     this.removeOptions = [];
             //     this.removeOptions.push(avail[j]);
             // }
-
+            if(findIntersection){
+                this.stack.push(this.current);
+                findIntersection = false;
+            }
             
             this.stack.push(go);
             this.current = go;
@@ -50,6 +53,8 @@ function path(cur, to){
         else{
             
             this.current = this.stack.pop();
+            findIntersection = true;
+
             if(this.current && this.current.visited && this.found){
                 this.way.push(this.current);
                 this.pathIndex.push(checkIndex(this.current.i, this.current.j));

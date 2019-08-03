@@ -25,6 +25,9 @@ var pathIndex = [];
 var highestScore = 0; 
 let speedSlider;
 let speedSpan;
+let gameEnd = false;
+let generationSpan;
+let findIntersection = false;
 
 
 document.onkeydown = function(e) {
@@ -67,7 +70,7 @@ var s = function(sketch)
 
     // speedSlider = sketch.select('#speedSlider');
     // speedSpan = sketch.select('#speed');
-    // highScoreSpan = sketch.select('#hs');
+    generationSpan = sketch.select('#generation');
     // allTimeHighScoreSpan = sketch.select('#ahs');
     runBestButton = sketch.select('#best');
     runBestButton.mousePressed(sketch.toggleState);
@@ -142,12 +145,12 @@ var s = function(sketch)
           finder.draw();
           // console.log(finder.paths[0].pathIndex);
           pathIndex = (finder.paths[0].pathIndex);
-          // console.log(pathIndex);
+          console.log(pathIndex);
         }else{
           finder = new Finder();
         }
 
-    }else if(solveMazeFinished){
+    }else if(solveMazeFinished && !gameEnd){
 
         for (let n = 0; n < cycles; n++) {
 
@@ -167,6 +170,11 @@ var s = function(sketch)
               if(circle.hit){
                 // console.log(actions);
                 bn.activePopulation.splice(i, 1);
+                if(circle.score > highestScore){
+                    highestScore = circle.score;
+                    // console.log("highestScore: " + highestScore);
+                    console.log(circle.index);
+                }
               }
 
             }
@@ -182,20 +190,17 @@ var s = function(sketch)
       if (bn.activePopulation.length == 0) {
           bn.nextGeneration();
           generation++;
+          // Update DOM Elements
+          generationSpan.html(generation);
+          if(generation % 10 == 0){
+              highestScore = 0;
+          }
+          // highestScore = 0;
           // console.log("generation: " + generation);
       }
 
-      // if(finder){
-      //     finder.draw();
-      //     // console.log(finder.paths[0].pathIndex);
-      //     pathIndex = (finder.paths[0].pathIndex);
-      //     // console.log(pathIndex);
-      //   }else{
-      //     finder = new Finder();
-      //   }
-
     }
-    // circle1.draw();
+
 
   };
 
