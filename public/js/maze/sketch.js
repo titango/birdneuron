@@ -14,12 +14,20 @@ var distance = 0, longdist = 0;
 var longest;
 var genFinished = false;
 var runBest = false;
+var solveMazeFinished = false;
 var runBestButton;
 var solveGame = false;
 var solveButton;
 var finder = undefined;
 var circle1 = new Circle();
-
+var generation = 0;
+var pathIndex = [];
+var highestScore = 0; 
+let speedSlider;
+let speedSpan;
+let gameEnd = false;
+let generationSpan;
+let findIntersection = false;
 
 
 document.onkeydown = function(e) {
@@ -62,16 +70,19 @@ var s = function(sketch)
 
     // speedSlider = sketch.select('#speedSlider');
     // speedSpan = sketch.select('#speed');
-    // highScoreSpan = sketch.select('#hs');
+    generationSpan = sketch.select('#generation');
     // allTimeHighScoreSpan = sketch.select('#ahs');
     runBestButton = sketch.select('#best');
     runBestButton.mousePressed(sketch.toggleState);
-    solveButton = sketch.select('#solve');
-    solveButton.mousePressed(sketch.toggleState1);
+    // solveButton = sketch.select('#solve');
+    // solveButton.mousePressed(sketch.toggleState1);
+
+    speedSlider = sketch.select('#speedSlider');
+    speedSpan = sketch.select('#speed');
     
     // Create a population
     bn.totalPopulation = 500;
-    bn.inputlayer = 4;
+    bn.inputlayer = 5;
     bn.hiddenlayer = 8;
     bn.outputlayer = 4;
 
@@ -110,48 +121,86 @@ var s = function(sketch)
   sketch.draw = function()
   {
     sketch.background(mazebackground);
+    // Should we speed up cycles per frame
+    let cycles = speedSlider.value();
+    // console.log("cycles:", cycles);
+    speedSpan.html(cycles);
+
     drawMaze();
     //generate the maze
     if(runBest && !genFinished){
       generateMaze();
       // console.log(circle1);
 
-    }else if(genFinished){
+      // if(finder){
+      //     finder.draw();
+      //     // console.log(finder.paths);
+      //   }else{
+      //     finder = new Finder();
+      //   }
 
-        // console.log(bn.activePopulation);
+    }else if(genFinished && !solveMazeFinished){
+
+        if(finder){
+          finder.draw();
+          // console.log(finder.paths[0].pathIndex);
+          pathIndex = (finder.paths[0].pathIndex);
+          console.log(pathIndex);
+        }else{
+          finder = new Finder();
+        }
+
+    }else if(solveMazeFinished && !gameEnd){
+
+        for (let n = 0; n < cycles; n++) {
+
+            for (let i = bn.activePopulation.length - 1; i >= 0; i--) {
+              let circle = bn.activePopulation[i];
+              // Bird uses its brain!
+              circle.inputs = circle.predict();
+              // console.log(circle.inputs);
+              // console.log("bird.inputs: ", bird.inputs);
+              var actions = circle.outputs();
+              // console.log("actions: ", actions);
+              if(actions) circle.do(actions);
+              // circle1.update();
+              circle.generation = generation;
+              // circle.draw();
+
+              if(circle.hit){
+                // console.log(actions);
+                bn.activePopulation.splice(i, 1);
+                if(circle.score > highestScore){
+                    highestScore = circle.score;
+                    // console.log("highestScore: " + highestScore);
+                    console.log(circle.index);
+                }
+              }
+
+            }
+
+        }
+
+      // console.log(bn.activePopulation);
         for (let i = bn.activePopulation.length - 1; i >= 0; i--) {
           let circle = bn.activePopulation[i];
-          // Bird uses its brain!
-          circle.inputs = circle.predict();
-          // console.log(circle.inputs);
-          // console.log("bird.inputs: ", bird.inputs);
-          var actions = circle.outputs();
-          // console.log("actions: ", actions);
-          if(actions) circle.do(actions);
-          // circle1.update();
           circle.draw();
-
-          if(circle.hit){
-            bn.activePopulation.splice(i, 1);
-          }
-          
-      }
+        }
 
       if (bn.activePopulation.length == 0) {
           bn.nextGeneration();
-          console.log("new")
+          generation++;
+          // Update DOM Elements
+          generationSpan.html(generation);
+          if(generation % 10 == 0){
+              highestScore = 0;
+          }
+          // highestScore = 0;
+          // console.log("generation: " + generation);
       }
 
-
-
-        // if(finder){
-        //   finder.draw();
-        //   // console.log(finder.paths);
-        // }else{
-        //   finder = new Finder();
-        // }
     }
-    // circle1.draw();
+
 
   };
 
