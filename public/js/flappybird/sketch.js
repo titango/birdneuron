@@ -67,7 +67,7 @@ var s = function(sketch)
     importmodelBtn.mousePressed(sketch.importModel);
 
     // Create a population
-    bn.totalPopulation = 500;
+    bn.totalPopulation = 10;
     bn.inputlayer = 5;
     bn.hiddenlayer = 8;
     bn.outputlayer = 2;
@@ -124,6 +124,7 @@ var s = function(sketch)
   sketch.importModel = function()
   {
     bn.import(Bird); 
+    pipes = [];
   }
 
   sketch.toggleState = function()
@@ -173,7 +174,7 @@ var s = function(sketch)
 
     // How many times to advance the game
     for (let n = 0; n < cycles; n++) {
-      
+      console.log("counter: ", counter);
 
       // Show all the pipes
       for (let i = pipes.length - 1; i >= 0; i--) {
@@ -206,9 +207,9 @@ var s = function(sketch)
           let bird = bn.activePopulation[i];
           // Bird uses its brain!
           bird.inputs = bird.think(pipes);
-          // console.log("bird.inputs: ", bird.inputs);
+          console.log("bird.inputs: ", bird.inputs);
           var actions = bird.outputs();
-          // console.log("actions: ", actions);
+          console.log("actions: ", actions);
           if(actions) bird.do(actions);
           bird.update();
 
@@ -232,6 +233,7 @@ var s = function(sketch)
 
       // Add a new pipe every so often
       if (counter % 75 == 0) {
+        console.log("new pipe");
         pipes.push(new Pipe());
       }
       counter++;
@@ -279,11 +281,19 @@ var s = function(sketch)
       time = stopTime - initialTime;
       saveModelGeneration(generation, time, tempHighScore, dataSaved);
       generation += 1;
-      bn.nextGeneration(function(){
-        counter = 0;
-        tempHighScore = 0;
-        pipes = [];
-      });
+      
+      // Comment when import
+      // bn.nextGeneration(function(){
+      //   counter = 0;
+      //   tempHighScore = 0;
+      //   pipes = [];
+      // });
+      
+      //Uncomment when import
+      counter = 0;
+      tempHighScore = 0;
+      pipes = [];
+      bn.refreshPopulation();
 
       //Reset variables
       time = stopTime;
@@ -323,7 +333,7 @@ function saveModelGeneration(genNumber, time, scores, modelArray)
     score: scores
   }
   modelArray.data.push(newData);
-  console.log(modelArray);
+  // console.log(modelArray);
   drawLineChart(modelArray);
   
 }

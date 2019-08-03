@@ -28,6 +28,16 @@ class BirdNeuron
 		}
 	}
 
+	refreshPopulation()
+	{
+		this._activePopulation = [];
+		for(var i = 0; i < this._population.length; i++)
+		{
+			this._activePopulation.push(this.modelCopy(this._population[i]));
+		}
+		 
+	}
+
 	modelCopy(mod)
 	{
 	  var tempBrain = mod.brain;
@@ -45,8 +55,8 @@ class BirdNeuron
       returnObj.brain = tempBrain.copy();
       returnObj.brain.mutate(function(x){
 		if (Math.random(1) < 0.1) {
-		  // let offset = Math.sqrt(-2 * Math.log(Math.random()))*Math.cos((2*Math.PI) * Math.random()) * 0.5;
-		  let offset = birdP5.randomGaussian() * 0.5;
+		  let offset = Math.sqrt(-2 * Math.log(Math.random()))*Math.cos((2*Math.PI) * Math.random()) * 0.5;
+		  // let offset = birdP5.randomGaussian() * 0.5;
 		  let newx = x + offset;
 		  return newx;
 		} else {

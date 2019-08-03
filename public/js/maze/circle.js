@@ -7,7 +7,7 @@ class Circle {
     // Score is how many frames it's been alive
     this.step = 0;
     
-    this.index = 0
+    this.index = 0;
 
     this.w = 100;
 
@@ -56,6 +56,7 @@ class Circle {
   do(outputs){
     var max  = Math.max.apply(null, outputs);
     var index = outputs.indexOf(max);
+
     if(this.isStuck() && this.generation % 100 != 0){
       // console.log(cells[this.index]);
       var top = cells[this.index].walls[0] ? 1 : 0;
