@@ -28,6 +28,9 @@ let speedSpan;
 let gameEnd = false;
 let generationSpan;
 let findIntersection = false;
+//Models save in mongodb
+let dataSaved;
+let initialTime;
 
 
 document.onkeydown = function(e) {
@@ -79,12 +82,24 @@ var s = function(sketch)
 
     speedSlider = sketch.select('#speedSlider');
     speedSpan = sketch.select('#speed');
+
+    exportmodelBtn = sketch.select("#exportmodel");
+    exportmodelBtn.mousePressed(sketch.exportModel);
+
+    importmodelBtn = sketch.select("#importmodel");
+    importmodelBtn.mousePressed(sketch.importModel);
     
     // Create a population
     bn.totalPopulation = 500;
     bn.inputlayer = 5;
     bn.hiddenlayer = 8;
     bn.outputlayer = 4;
+
+    //Model init
+    dataSaved = {};
+    generation = 1;
+    time = 0;
+    initialTime = (new Date).getTime();
 
     //Create circles
     var tempCircles = [];
@@ -142,10 +157,11 @@ var s = function(sketch)
     }else if(genFinished && !solveMazeFinished){
 
         if(finder){
-          finder.draw();
-          // console.log(finder.paths[0].pathIndex);
-          pathIndex = (finder.paths[0].pathIndex);
-          console.log(pathIndex);
+          for (var i = 0; i < 100; i++) {
+            finder.draw();
+            pathIndex = (finder.paths[0].pathIndex);
+          }
+          
         }else{
           finder = new Finder();
         }
@@ -192,11 +208,14 @@ var s = function(sketch)
           generation++;
           // Update DOM Elements
           generationSpan.html(generation);
-          if(generation % 10 == 0){
-              highestScore = 0;
-          }
-          // highestScore = 0;
-          // console.log("generation: " + generation);
+          // if(generation % 10 == 0){
+          //     highestScore = 0;
+          // }
+
+          var stopTime = (new Date).getTime();
+          time = stopTime - initialTime;
+          saveModelGeneration(generation, time, highestScore, dataSaved);
+          
       }
 
     }
@@ -212,6 +231,18 @@ var s = function(sketch)
   sketch.toggleState1 = function()
   {
     solveGame = !solveGame;
+  }
+
+  sketch.exportModel = function()
+  {
+    bn.exportBest();
+  }
+
+  sketch.importModel = function()
+  {
+    bn.import(Circle); 
+    // pipes = [];
+    solveGame = false;
   }
 
 }
@@ -285,6 +316,138 @@ function removeWalls(a, b) {
     a.walls[2] = false;
     b.walls[0] = false;
   }
+}
+
+function saveModelGeneration(genNumber, time, scores, modelArray)
+{
+  if(!modelArray.topScore)
+  {
+    modelArray.topScore = 0;
+  }
+
+  if(!modelArray.data)
+  {
+    modelArray.data = [];
+  }
+
+  if(modelArray.topScore < scores)
+  {
+    modelArray.topScore = scores;
+  }
+
+  var newData = {
+    generation: genNumber,
+    time: time, 
+    score: scores
+  }
+  modelArray.data.push(newData);
+  // console.log(modelArray);
+  drawLineChart(modelArray);
+  
+}
+
+function drawLineChart(modelArray)
+{
+  //Reset
+  var lineDiv = document.getElementById("linechart");
+  lineDiv.innerHTML = "";
+
+  var margin = {top: 20, right: 50, bottom: 80, left: 50}
+  , width = lineDiv.clientWidth - margin.left - margin.right // Use the window's width 
+  , height = lineDiv.clientHeight - margin.top - margin.bottom; // Use the window's height
+
+  var n = 21;
+
+// 5. X scale will use the index of our data
+var xScale = d3.scaleLinear()
+    .domain([0, modelArray.data[modelArray.data.length-1].generation]) // input
+    .range([0, width]); // output
+
+// var xAxis = d3.svg.axis()
+//       .scale(xScale)
+//       .tickSize(0,0)
+//       .ticks(5)
+//       .tickPadding(6)
+//       .orient("bottom")
+//       .tickFormat(function(d){return d});
+
+// 6. Y scale will use the randomly generate number 
+var yScale = d3.scaleLinear()
+    .domain([0,modelArray.topScore]) // input 
+    .range([height, 0]); // output 
+
+// 7. d3's line generator
+var line = d3.line()
+    .x(function(d, i) { return xScale(i); }) // set the x values for the line generator
+    .y(function(d) { return yScale(d.y); }) // set the y values for the line generator 
+    .curve(d3.curveMonotoneX) // apply smoothing to the line
+
+// 8. An array of objects of length N. Each object has key -> value pair, the key being "y" and the value is a random number
+// var dataset = d3.range(n).map(function(d) { return {"y": d3.randomUniform(1)() } })
+var dataset = modelArray.data.map(function(d) { 
+  return {"y": d.score } 
+});
+
+// 1. Add the SVG to the page and employ #2
+var svg = d3.select("#linechart").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+// 3. Call the x axis in a group tag
+svg.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(d3.axisBottom(xScale).tickFormat(function(d){ 
+      var t = d;
+      if(typeof modelArray.data[d] == 'undefined')
+      {
+        return;
+      }
+      return t+1 + "(" + modelArray.data[d].time + ")";
+    })); // Create an axis component with d3.axisBottom
+
+svg.append("text")             
+      .attr("transform",
+            "translate(" + (width/2) + " ," + 
+                           (height - margin.top + margin.bottom - 20) + ")")
+      .style("text-anchor", "middle")
+      .text("Generation with Time");
+
+
+// 4. Call the y axis in a group tag
+svg.append("g")
+    .attr("class", "y axis")
+    .call(d3.axisLeft(yScale)); // Create an axis component with d3.axisLeft
+
+svg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - margin.left)
+      .attr("x",0 - (height / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .text("Score");    
+
+// 9. Append the path, bind the data, and call the line generator 
+svg.append("path")
+    .datum(dataset) // 10. Binds data to the line 
+    .attr("class", "line") // Assign a class for styling 
+    .attr("d", line); // 11. Calls the line generator 
+
+// 12. Appends a circle for each datapoint 
+svg.selectAll(".dot")
+    .data(dataset)
+  .enter().append("circle") // Uses the enter().append() method
+    .attr("class", "dot") // Assign a class for styling
+    .attr("cx", function(d, i) { return xScale(i) })
+    .attr("cy", function(d) { return yScale(d.y) })
+    .attr("r", 5)
+      // .on("mouseover", function(a, b, c) { 
+      //   console.log(a) 
+      //   this.attr('class', 'focus')
+      // })
+      // .on("mouseout", function() {  });
 }
 
 var mazeP5 = new p5(s);

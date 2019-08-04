@@ -12,8 +12,8 @@ router.get('/',function(req,res){
 });
 
 //return the about-us page
-router.get('/about_us',function(req,res){
-  res.sendFile(path.join(__dirname+'/../views/about_us.html'));
+router.get('/document',function(req,res){
+  res.sendFile(path.join(__dirname+'/../views/document.html'));
 });
 
 //return the header section
