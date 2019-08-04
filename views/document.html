@@ -1,0 +1,208 @@
+<meta charset="UTF-8">
+<div class="header"></div>
+
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+
+<!-- Scripts Header -->
+<script src="/js/jquery.min.js"></script>
+<script src="/js/jquery.scrollex.min.js"></script>
+<script src="/js/skel.min.js"></script>
+<script src="/js/util.js"></script>
+<script src="/js/main.js"></script>
+<script src="/js/header.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css" />
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js"></script>
+
+
+	<section id="two" class="wrapper style2" style="color: #333 !important">
+		<div class="inner">
+			<div class="box">
+				<div class="content">
+					<header class="align-center">
+						<p>Library</p>
+						<h2>Properties</h2>
+					</header>
+					
+						<dl>
+							<dt>activePopulation</dt>
+							<dd>
+								<p>Get and set the total active population number</p>
+							</dd>
+
+							<dt>Population</dt>
+							<dd>
+								<p>Get and set the total population number</p>
+							</dd>
+
+							<dt>totalPopulation</dt>
+							<dd>
+								<p>Set the number of population</p>
+							</dd>
+
+							<dt>inputLayer</dt>
+							<dd>
+								<p>Set the input layer number</p>
+							</dd>
+
+							<dt>hiddenLayer</dt>
+							<dd>
+								<p>Set the hidden layer number</p>
+							</dd>
+
+							<dt>outputLayer</dt>
+							<dd>
+								<p>Set the output layer number</p>
+							</dd>
+
+						</dl>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section id="two" class="wrapper style2" style="color: #333 !important">
+		<div class="inner">
+			<div class="box">
+				<div class="content">
+					<header class="align-center">
+						<p>Library</p>
+						<h2>Methods</h2>
+					</header>
+					
+						<dl>
+							<dt>export()</dt>
+							<dd>
+								<p>Export the current population models to a json file named “data.json”</p>
+							</dd>
+
+							<dt>exportBest()</dt>
+							<dd>
+								<p>export the model with the highest score to a json file named “data.json”</p>
+							</dd>
+
+							<dt>input(arrayObjects, useSavedData)</dt>
+							<dd>
+								<p>inputs models to population and active population</p>
+								<p>Parameters:</p>
+										<ul>
+											<li>arrayObjects: an array of javascript Class objects </li>
+											<li>useSavedData: true will retain the current “brain” neuron of the object and false will create new “brain” neurons of the object</li>
+										</ul>
+							</dd>
+
+							<dt>import(classParam)</dt>
+							<dd>
+								<p>inputs models to population and active population</p>
+								<p>Parameters: </p>
+										<ul>
+											<li>classParam: Classname of the model</li>
+										</ul>
+							</dd>
+
+							<dt>modelCopy(model)</dt>
+							<dd>
+								<p>copy the current model to a new object</p>
+								<p>Parameters: </p>
+										<ul>
+											<li>Model: the current model</li>
+										</ul>
+							</dd>
+
+							<dt>refreshPopulation()</dt>
+							<dd>
+								<p>Copy the models in ‘population’ array to the ‘active population’ array</p>
+							</dd>
+
+						</dl>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<section id="two" class="wrapper style2" style="color: #333 !important">
+		<div class="inner">
+			<div class="box">
+				<div class="content">
+					<header class="align-center">
+						<p>Usage</p>
+						<h2>Tutorial</h2>
+					</header>
+					
+					<pre><code>CREATE Bird model
+class Bird {
+	      constructor()
+	      {
+			this.x = 64;
+			this.y = 10;
+	      }
+	
+	      copy() // Required!
+	      {
+			return new Bird();
+	      }
+		
+		// function that returns an array of input numbers
+		think()
+		{
+			. . . . .
+		}
+	
+		// function that will determine what the bird will do 
+// when receiving an output array
+		do(outputs)
+		{
+			. . . . . .
+		}
+
+		// Display or draw the bird
+		show()
+		{
+			. . . . . .
+		}
+}
+*Note that function copy() is required which return new model object.
+
+
+CREATE BirdNeuron object and insert models in main file.
+
+//Using bird neuron
+let bn = new BirdNeuron();
+
+//Settings
+bn.totalPopulation = 500;
+bn.inputlayer = 5;
+bn.hiddenlayer = 8;
+bn.outputlayer = 2;
+
+//Create bird models
+      var tempBirds = [];
+      for (let i = 0; i < bn.totalPopulation; i++) {
+        let bird = new Bird();
+        // console.log("bird: ", bird);
+        tempBirds.push(bird);
+      }
+	
+	//Insert to both population and total population
+      bn.input(tempBirds, false);
+
+	//Models in action - show the birds
+for (let i = bn.activePopulation.length - 1; i >= 0; i--) {
+          let bird = bn.activePopulation[i];
+
+          // Bird uses its brain!
+          bird.inputs = bird.think();
+
+          var actions = bird.outputs();
+
+          if(actions) bird.do(actions);
+          bird.show();
+}</code></pre>
+				</div>
+			</div>
+		</div>
+	</section>
+	
+
+<div class="footer"></div>
+<script src="/js/footer.js"></script>
