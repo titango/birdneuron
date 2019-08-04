@@ -14,7 +14,7 @@ let speedSlider;
 let speedSpan;
 let highScoreSpan;
 let allTimeHighScoreSpan;
-let curGeneration, time, modelScore;
+let generation, time, modelScore;
 let initialTime;
 
 // All time high score
@@ -33,6 +33,7 @@ let pipemodel_reverse;
 
 //Models save in mongodb
 let dataSaved;
+var allData;
 
 var s = function(sketch)
 {
@@ -66,8 +67,17 @@ var s = function(sketch)
     importmodelBtn = sketch.select("#importmodel");
     importmodelBtn.mousePressed(sketch.importModel);
 
+    uploadModelBtn = sketch.select("#upload_chart");
+    uploadModelBtn.mousePressed(sketch.uploadData);
+
+    showDataBtn = sketch.select("#show_current_data");
+    showDataBtn.mousePressed(sketch.showScoreData);    
+
+    refreshDataBtn = sketch.select("#refresh_data");
+    refreshDataBtn.mousePressed(refreshData);
+
     // Create a population
-    bn.totalPopulation = 10;
+    bn.totalPopulation = 500;
     bn.inputlayer = 5;
     bn.hiddenlayer = 8;
     bn.outputlayer = 2;
@@ -88,33 +98,30 @@ var s = function(sketch)
     time = 0;
     initialTime = (new Date).getTime();
 
-    //Ajax get statistics
-    // $.ajax({
-    //   url: "http://localhost:8080/birdchart/get",
-    //   success: function(result){
-    //     console.log("result: ", result);
-    //   }
-    // });
-
-    //Ajax upload statistics
-    // $.ajax({
-    //   url: "http://localhost:8080/birdchart/upload",
-    //   type: "POST",
-    //   data: {
-    //     data: {
-    //       topScore: 1,
-    //       data: {
-    //         generation: 1,
-    //         time: 1,
-    //         score: 1
-    //       }
-    //     }
-    //   },
-    //   success: function(result){
-    //     console.log("upload successfully: ", result);
-    //   } 
-    // });
+    allData = [];
+    refreshData();
   };
+
+  sketch.uploadData = function()
+  {
+    // Ajax upload statistics
+    $.ajax({
+      url: "http://localhost:8080/birdchart/upload",
+      type: "POST",
+      data: {
+        data: dataSaved
+      },
+      success: function(result){
+        console.log("upload successfully: ", result);
+        alert("Upload data successfully");
+      } 
+    });
+  }
+
+  sketch.showScoreData = function()
+  {
+    drawLineChart(dataSaved);
+  }
 
   sketch.exportModel = function()
   {
@@ -148,6 +155,10 @@ var s = function(sketch)
     sketch.fill(65);
     sketch.text("Score: ", sketch.width - 200, 30);
 
+    sketch.textSize(20);
+    sketch.text("Generation: ", 20, sketch.height - 30);
+    sketch.text(generation-1, 140, sketch.height - 30);
+
     // Should we speed up cycles per frame
     let cycles = speedSlider.value();
     // console.log("cycles:", cycles);
@@ -166,6 +177,7 @@ var s = function(sketch)
       }
 
       sketch.fill(65);
+      sketch.textSize(32);
       sketch.text(tempHighScore, sketch.width - 100, 30);
       allTimeHighScoreSpan.html(highScore);
 
@@ -174,7 +186,6 @@ var s = function(sketch)
 
     // How many times to advance the game
     for (let n = 0; n < cycles; n++) {
-      console.log("counter: ", counter);
 
       // Show all the pipes
       for (let i = pipes.length - 1; i >= 0; i--) {
@@ -207,9 +218,7 @@ var s = function(sketch)
           let bird = bn.activePopulation[i];
           // Bird uses its brain!
           bird.inputs = bird.think(pipes);
-          console.log("bird.inputs: ", bird.inputs);
           var actions = bird.outputs();
-          console.log("actions: ", actions);
           if(actions) bird.do(actions);
           bird.update();
 
@@ -233,7 +242,6 @@ var s = function(sketch)
 
       // Add a new pipe every so often
       if (counter % 75 == 0) {
-        console.log("new pipe");
         pipes.push(new Pipe());
       }
       counter++;
@@ -260,6 +268,7 @@ var s = function(sketch)
     // Update DOM Elements
     // highScoreSpan.html(tempHighScore);
     sketch.fill(65);
+    sketch.textSize(32);
     sketch.text(tempHighScore, sketch.width - 100, 30);
     allTimeHighScoreSpan.html(highScore);
     
@@ -310,6 +319,47 @@ var s = function(sketch)
   // }
 }
 
+function refreshData()
+{
+  $('#history').empty();
+  
+  // Ajax get statistics
+  $.ajax({
+    url: "http://localhost:8080/birdchart/get",
+    success: function(result){
+      allData = result;
+      console.log("alldata: ", allData);
+      if(typeof allData.data != 'undefined' && allData.data.length > 0)
+      {
+        for(var i = 0; i < allData.data.length; i++)
+        {
+          var cur = allData.data[i];
+          var d = (new Date(cur.date));
+          var da = d.toLocaleDateString();
+          var ts = d.toLocaleTimeString();
+
+          $('#history').append(
+              '<button type="button" class="list-group-item list-group-item-action" onclick="historyClick(' + '\'' + cur._id + '\'' + ');">' + da + ' ' + ts +'</button>'
+          );    
+        }  
+      }
+      
+    }
+  });
+}
+
+function historyClick(dataId)
+{ 
+  var foundData = allData.data.find(function(d){
+    return d._id == dataId;
+  });
+
+  if(typeof foundData != 'undefined')
+  {
+    drawLineChart(foundData);
+  }
+}
+
 function saveModelGeneration(genNumber, time, scores, modelArray)
 {
   if(!modelArray.topScore)
@@ -334,7 +384,7 @@ function saveModelGeneration(genNumber, time, scores, modelArray)
   }
   modelArray.data.push(newData);
   // console.log(modelArray);
-  drawLineChart(modelArray);
+  // drawLineChart(modelArray);
   
 }
 
@@ -354,14 +404,6 @@ function drawLineChart(modelArray)
 var xScale = d3.scaleLinear()
     .domain([0, modelArray.data[modelArray.data.length-1].generation]) // input
     .range([0, width]); // output
-
-// var xAxis = d3.svg.axis()
-//       .scale(xScale)
-//       .tickSize(0,0)
-//       .ticks(5)
-//       .tickPadding(6)
-//       .orient("bottom")
-//       .tickFormat(function(d){return d});
 
 // 6. Y scale will use the randomly generate number 
 var yScale = d3.scaleLinear()
