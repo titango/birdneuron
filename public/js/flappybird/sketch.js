@@ -283,17 +283,17 @@ var s = function(sketch)
       generation += 1;
       
       // Comment when import
-      // bn.nextGeneration(function(){
-      //   counter = 0;
-      //   tempHighScore = 0;
-      //   pipes = [];
-      // });
+      bn.nextGeneration(function(){
+        counter = 0;
+        tempHighScore = 0;
+        pipes = [];
+      });
       
       //Uncomment when import
-      counter = 0;
-      tempHighScore = 0;
-      pipes = [];
-      bn.refreshPopulation();
+      // counter = 0;
+      // tempHighScore = 0;
+      // pipes = [];
+      // bn.refreshPopulation();
 
       //Reset variables
       time = stopTime;
