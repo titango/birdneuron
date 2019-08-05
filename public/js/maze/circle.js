@@ -4,7 +4,6 @@ class Circle {
     this.i = 0;
     this.j = 0;
 
-    // Score is how many frames it's been alive
     this.step = 0;
     
     this.index = 0;
@@ -57,7 +56,7 @@ class Circle {
     var max  = Math.max.apply(null, outputs);
     var index = outputs.indexOf(max);
 
-    if(this.isStuck() && this.generation % 100 != 0){
+    if(this.isStuck() ){
       // console.log(cells[this.index]);
       var top = cells[this.index].walls[0] ? 1 : 0;
       var right = cells[this.index].walls[1] ? 1 : 0;
@@ -101,7 +100,7 @@ class Circle {
         this.hit = true;
       }
 
-    }else if(this.generation > 200){
+    }else if(this.aStartCheck()){
 
       var checkIndex = pathIndex.indexOf(this.index);
       var nextIndex = pathIndex[checkIndex - 1];
@@ -162,9 +161,6 @@ class Circle {
           this.step += 1;
         }
 
-        // if(this.score > highestScore){
-        //   highestScore = this.score;
-        // }
 
         this.visitedIndexCount.push(1);
 
@@ -174,11 +170,6 @@ class Circle {
         this.visitedIndexCount[check] = this.visitedIndexCount[check] + 1;
       }
       
-      // if(this.index == highestIndex){
-      //   this.highestIndexCount += 1;
-      // }
-
-      // this.draw();
 
       this.previousIndex = this.index;
       if(this.index == longest.index && !gameEnd){
@@ -266,5 +257,15 @@ class Circle {
     return false;
   }
 
+  aStartCheck(){
+
+    var rand = Math.floor(Math.random() * 100) + 11;
+    var check = Math.round(Math.random());
+    if(this.generation > rand && check == 0){
+      return true;
+    }
+
+    return false;
+  }
 
 }

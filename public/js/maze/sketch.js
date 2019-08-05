@@ -102,14 +102,12 @@ var s = function(sketch)
     initialTime = (new Date).getTime();
 
     //Create circles
-    var tempCircles = [];
+    let tempCircles = [];
     for (let i = 0; i < bn.totalPopulation; i++) {
       let circle = new Circle();
-      // console.log("bird: ", bird);
       tempCircles.push(circle);
     }
 
-    // console.log(bn);
     bn.input(tempCircles);
 
 
@@ -208,9 +206,9 @@ var s = function(sketch)
           generation++;
           // Update DOM Elements
           generationSpan.html(generation);
-          // if(generation % 10 == 0){
-          //     highestScore = 0;
-          // }
+          if(generation % 10 == 0){
+              highestScore = 0;
+          }
 
           var stopTime = (new Date).getTime();
           time = stopTime - initialTime;
