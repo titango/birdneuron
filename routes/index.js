@@ -11,9 +11,14 @@ router.get('/',function(req,res){
   res.sendFile(path.join(__dirname+'/../views/index.html'));
 });
 
-//return the about-us page
+//return the document page
 router.get('/document',function(req,res){
   res.sendFile(path.join(__dirname+'/../views/document.html'));
+});
+
+//return the usage page
+router.get('/usage',function(req,res){
+  res.sendFile(path.join(__dirname+'/../views/usage.html'));
 });
 
 //return the header section
