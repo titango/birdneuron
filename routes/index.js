@@ -41,6 +41,10 @@ router.get('/demo2',function(req,res){
   res.sendFile(path.join(__dirname+'/../views/demo2.html'));
 });
 
+router.get("/download", function(req, res, next){
+
+});
+
 //BIRD CHART API
 router.get('/birdchart/get',birdRoute.getAll);
 router.post('/birdchart/upload',birdRoute.uploadData);

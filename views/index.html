@@ -7,6 +7,20 @@
 <script src="/js/util.js"></script>
 <script src="/js/main.js"></script>
 <script src="/js/header.js"></script>
+<script>
+	function downloads()
+	{
+		var a = document.createElement("a");
+		var pros = location.protocol;
+		var host = location.host;
+		var path = "/js/lib/birdneuron.js";
+		var fullpath = pros + "//" + host + path;
+		a.href = fullpath;
+		a.setAttribute("download", "birdneuron.js");
+		a.click();
+		return false;
+	}
+</script>
 
 <!-- One -->
 	<section id="one" class="wrapper style2">
@@ -62,7 +76,7 @@
 						<h2>Verson 1.0.0</h2>
 					</header>
 					<ul class="actions align-center">
-									<li><a href="#download" class="button special">Download Now</a></li>
+						<li><a href="#download" class="button special" onclick="downloads();">Download Now</a></li>
 					</ul>
 				</div>
 			</div>
