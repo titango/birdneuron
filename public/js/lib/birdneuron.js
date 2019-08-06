@@ -130,9 +130,9 @@ class BirdNeuron
 		this._exportFunction(json);
 	}
 
-	import(classParam)
+	import(classParam, callback)
 	{
-		this._importFunction(classParam);
+		this._importFunction(classParam, callback);
 	}
 
 	//Data: As string json
@@ -146,7 +146,7 @@ class BirdNeuron
 	  a_element = null;
 	}
 
-	_importFunction(classParam)
+	_importFunction(classParam, callback)
 	{
 	  var that = this;
 	  var file_element = document.createElement('input');
@@ -157,7 +157,7 @@ class BirdNeuron
 	  	var reader = new FileReader();
         reader.onload = function(){
 	        var objArray = JSON.parse(JSON.parse(event.target.result));
-	        console.log("objArray: ", objArray);
+	        // console.log("objArray: ", objArray);
 
 	        var tempArray = [];
 	        for(var i = 0; i < objArray.length; i++)
@@ -168,9 +168,8 @@ class BirdNeuron
 	        	b.brain = n;
 	        	tempArray.push(b);
 	        }
-
-	        console.log(tempArray);
 	        that.input(tempArray, true);
+	        callback();
         };
         reader.readAsText(event.target.files[0]);
 
