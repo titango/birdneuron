@@ -264,7 +264,9 @@ class Circle {
     if(this.generation > rand && check == 0){
       return true;
     }
-
+    if(importCompleted){
+      return true;
+    }
     return false;
   }
 

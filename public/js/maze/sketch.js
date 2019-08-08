@@ -31,7 +31,7 @@ let findIntersection = false;
 //Models save in mongodb
 let dataSaved;
 let initialTime;
-
+let importCompleted = false;
 
 document.onkeydown = function(e) {
   event.preventDefault();
@@ -202,7 +202,20 @@ var s = function(sketch)
         }
 
       if (bn.activePopulation.length == 0) {
+
+        var stopTime = (new Date).getTime();
+          time = stopTime - initialTime;
+          saveModelGeneration(generation, time, highestScore, dataSaved);
+
+        if(!importCompleted){
           bn.nextGeneration();
+          
+        }else{
+          
+          bn.refreshPopulation();
+          //Reset variables
+          time = stopTime;
+        }
           generation++;
           // Update DOM Elements
           generationSpan.html(generation);
@@ -210,9 +223,7 @@ var s = function(sketch)
               highestScore = 0;
           }
 
-          var stopTime = (new Date).getTime();
-          time = stopTime - initialTime;
-          saveModelGeneration(generation, time, highestScore, dataSaved);
+          
           
       }
 
@@ -238,13 +249,22 @@ var s = function(sketch)
 
   sketch.importModel = function()
   {
-    bn.import(Circle); 
+    bn.import(Circle, function(){ 
+      gameEnd = false;
+      // bn.refreshPopulation();
+      importCompleted = true;
+      generation = 1;
+      
+    }); 
     // pipes = [];
-    solveGame = false;
+    // gameEnd = false;
   }
 
 }
 
+// function runBestCircle(){
+  
+// }
 
 function drawMaze(){
   for (var i = 0; i < cells.length; i++) {
